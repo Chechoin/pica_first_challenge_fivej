@@ -1,0 +1,29 @@
+services:
+  user_crud:
+    restart: "no"
+    build: 
+      context: .
+      dockerfile: ./user_crud_Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port ${USER_CRUD_PORT_INTERNAL}
+    volumes:
+      - ./app:/user_crud/app
+      - ./alembic:/user_crud/alembic
+      - ./alembic.ini:/user_crud/alembic.ini
+      - ./.env:/user_crud/.env
+    ports:
+      - "${USER_CRUD_PORT_EXTERNAL}:${USER_CRUD_PORT_INTERNAL}"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+  db:
+    image: mysql:5.7
+    restart: "no"
+    env_file:
+      - .env
+    ports:
+      - "${DB_PORT_EXTERNAL}:${DB_PORT_INTERNAL}"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    command: ["mysqld", "--bind-address=0.0.0.0"]
