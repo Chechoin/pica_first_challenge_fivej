@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.errors import ServerErrorMiddleware
 
-from app.config.logger import logger
+from app.config.logger import Logger
 from app.utils.exception_handler import custom_exception_handler
 
 from . import models
@@ -20,6 +20,7 @@ app.add_middleware(ServerErrorMiddleware, handler=custom_exception_handler)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logger = Logger().logger
     logger.info("Starting up the application")
     yield
     logger.info("Shutting down the application")

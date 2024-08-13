@@ -10,7 +10,7 @@ def verify_password(plain_password, hashed_password):
     return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password)
 
 
-def update_envs(override_vars=["UPDATED_ENV"]):
+def update_envs(override_vars: list[str]):
     env_vars = dotenv_values(
         "./.env",
     )
